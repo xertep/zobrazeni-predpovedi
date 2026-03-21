@@ -56,18 +56,11 @@ mountain_color = "gray73"
 
 
 def get_latest_file(pattern):
-    try:
-        response = requests.get(BASE_URL, timeout=10)
-        html = response.text
-    except Exception as e:
-        st.error(f"Failed to load base URL: {e}")
-        return None
-
-    matches = re.findall(r'href="(web_' + pattern + r'[^"]+\.json)"', html)
-
+    response = requests.get(BASE_URL)
+    html = response.text
+    matches = re.findall(r'href="(web_' + pattern + r'(?:_[A-Z]{2,3})?[^"]+\.json)"', html)
     if not matches:
         return None
-
     matches.sort()
     return BASE_URL + matches[-1]
 
@@ -104,10 +97,11 @@ def fetch_region(region_code):
 
             for item in items:
                 h = item.get("headline", "")
-                if "Počasí dnes večer a v noci (18-07):" in h:
-                    evening_found = True
-                if "Počasí (06-22):" in h:
-                    morning_found = True
+                if h:
+                    if "Počasí dnes večer a v noci (18-07):" in h:
+                        evening_found = True
+                    if "Počasí (06-22):" in h:
+                        morning_found = True
 
             all_data.append((pattern, headline_main, items, props.get("senderName", "")))
 
