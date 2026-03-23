@@ -217,14 +217,15 @@ st.markdown("### Kraje")
 region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
 selected_region = None
 
-for row in [region_codes[i:i+5] for i in range(0, len(region_codes), 5)]:  # 5 buttons per row
+for row_idx, row in enumerate([region_codes[i:i+5] for i in range(0, len(region_codes), 5)]):
     cols = st.columns(len(row))
-    for col, code in zip(cols, row):
+    for col_idx, (col, code) in enumerate(zip(cols, row)):
         color = main_region_colors.get(code, other_region_colors.get(code, "#eeeeee"))
-        # Make a clickable "card" with stylable_container
+        # unique key for each container
+        container_key = f"region_container_{code}_{row_idx}_{col_idx}"
         with col:
             with stylable_container(
-                code,
+                container_key,
                 css_styles=f"""
                 button {{
                     background-color: {color};
@@ -245,12 +246,13 @@ st.markdown("### Horské oblasti")
 selected_mountain = None
 mountain_codes = [code for code, _ in mountains]
 
-for row in [mountain_codes[i:i+5] for i in range(0, len(mountain_codes), 5)]:  # 5 per row
+for row_idx, row in enumerate([mountain_codes[i:i+5] for i in range(0, len(mountain_codes), 5)]):
     cols = st.columns(len(row))
-    for col, code in zip(cols, row):
+    for col_idx, (col, code) in enumerate(zip(cols, row)):
+        container_key = f"mountain_container_{code}_{row_idx}_{col_idx}"
         with col:
             with stylable_container(
-                code,
+                container_key,
                 css_styles=f"""
                 button {{
                     background-color: #eeeeee;
