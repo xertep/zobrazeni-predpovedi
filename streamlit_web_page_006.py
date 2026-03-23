@@ -257,7 +257,7 @@ for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(moun
                 container_key,
                 css_styles=f"""
                 button {{
-                    background-color: #eeeeee;
+                    background-color: #cccccc;
                     color: black;
                     height: 40px;
                     width: 130%;
