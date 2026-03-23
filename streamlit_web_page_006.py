@@ -234,7 +234,7 @@ for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] 
                     color: black;
                     height: 40px;
                     width: 100%;
-                    min-width: 100px;
+                    min-width: 85px;
                     font-size: 18px;
                     font-weight: 600;
                     border-radius: 12px;
