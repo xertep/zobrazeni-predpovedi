@@ -230,11 +230,11 @@ for row_idx, row in enumerate([region_codes[i:i+15] for i in range(0, len(region
                 button {{
                     background-color: {color};
                     color: black;
-                    height: 80px;
+                    height: 40px;
                     width: 100%;
-                    font-size: 16px;
+                    font-size: 18px;
                     font-weight: 600;
-                    border-radius: 16px;
+                    border-radius: 12px;
                 }}
                 """
             ):
@@ -257,11 +257,11 @@ for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(moun
                 button {{
                     background-color: #eeeeee;
                     color: black;
-                    height: 80px;
+                    height: 40px;
                     width: 100%;
-                    font-size: 16px;
+                    font-size: 18px;
                     font-weight: 600;
-                    border-radius: 26px;
+                    border-radius: 12px;
                 }}
                 """
             ):
