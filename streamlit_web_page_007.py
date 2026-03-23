@@ -118,7 +118,7 @@ def fetch_region(region_code):
     for pattern, headline_main, items, sender in all_data:
         if pattern in ["pCK2tx", "pCK3tx", "pCK4tx"] and not dalsi_dny_inserted:
             if not (morning_found and pattern == "pCK2tx"):
-                output_lines.append('<br><b>=== Další dny ===</b><br>')
+                output_lines.append('<br>\n<b>=== Další dny ===</b>\n<br>')
                 dalsi_dny_inserted = True
 
         if evening_found and pattern == "pCK0tx":
@@ -127,23 +127,23 @@ def fetch_region(region_code):
             continue
 
         if pattern not in ["pCKntx", "pCK2tx", "pCK3tx", "pCK4tx", "pCRntx", "pCR2tx", "pCR3tx", "pCR4tx", "pCR5tx", "pCR8tx"] and headline_main:
-            output_lines.append(f'<b>{headline_main}</b><br>')
+            output_lines.append(f'\n<b>{headline_main}</b>\n<br>')
 
         for item in items:
             h = item.get("headline")
             t = item.get("displayText")
             if h:
-                output_lines.append(f'<b>{h}</b><br>')
+                output_lines.append(f'\n<b>{h}</b>\n<br>')
             if t:
                 t = t.replace("\xa0", " ")
-                output_lines.append(f'{t}<br>')
+                output_lines.append(f'{t}\n<br>')
 
         if pattern == "pCK1tx" and sender:
             output_lines.append(f'<br>Meteorolog: {sender}<br>')
 
     for pattern, _, _, sender in reversed(all_data):
         if pattern == "pCK4tx" and sender:
-            output_lines.append(f'<br>Meteorolog: {sender}<br>')
+            output_lines.append(f'<br>\nMeteorolog: {sender}\n<br>')
             break
 
     return "".join(output_lines)
@@ -174,24 +174,24 @@ def fetch_mountain(mountain_code):
             items = sorted(props.get("data", []), key=lambda x: x.get("displayOrder", 0))
 
             if headline_main:
-                output_lines.append(f'<b>{headline_main}</b><br>')
+                output_lines.append(f'\n<b>{headline_main}</b>\n<br>')
 
             for item in items:
                 h = item.get("headline")
                 t = item.get("displayText")
                 if h:
-                    output_lines.append(f'<b>{h}</b><br>')
+                    output_lines.append(f'<b>\n{h}\n</b><br>')
                 if t:
                     t = t.replace("\xa0", " ")
-                    output_lines.append(f'{t}<br>')
+                    output_lines.append(f'{t}\n<br>')
 
         except Exception as e:
             st.error(f"Error loading {label} ({mountain_code}): {e}")
 
     if place_name:
-        output_lines.insert(0, f'<b>=== Předpověď {place_name} ===</b><br>')
+        output_lines.insert(0, f'<b>=== Předpověď {place_name} ===\n</b><br>')
     if sender_name:
-        output_lines.append(f'<br>Meteorolog: {sender_name}<br>')
+        output_lines.append(f'<br>\nMeteorolog: {sender_name}\n<br>')
 
     return "".join(output_lines)
 
