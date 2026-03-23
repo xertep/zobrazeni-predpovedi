@@ -212,9 +212,6 @@ other_region_colors = {
     "PU":"#eeeeee", "SC":"#eeeeee", "UL":"#eeeeee"
 }
 
-if "selected_region" not in st.session_state:
-    st.session_state.selected_region = None
-
 # --- Regions (Kraje) ---
 st.markdown("### Kraje")
 region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
@@ -224,14 +221,7 @@ selected_region = None
 for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] for i in range(0, len(region_codes), 15)]):
     cols = st.columns(len(row))
     for col_idx, (col, (code, label)) in enumerate(zip(cols, row)):
-        # Determine base color
-        base_color = main_region_colors.get(code, other_region_colors.get(code, "#eeeeee"))
-
-        # If this button is currently selected, keep the color (or make slightly darker)
-        if st.session_state.selected_region == code:
-            color = base_color  # could darken if you like, e.g., "#d0d0d0"
-        else:
-            color = base_color
+        color = main_region_colors.get(code, other_region_colors.get(code, "#eeeeee"))
 
         container_key = f"region_container_{code}_{row_idx}_{col_idx}"
 
@@ -249,58 +239,27 @@ for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] 
                     font-weight: 600;
                     border-radius: 12px;
                     margin-bottom: 8px;
-
-                    -webkit-appearance: none;
-                    -webkit-tap-highlight-color: transparent;
-                }}
-
-                button:active,
-                button:focus {{
-                    background-color: {color};
-                    outline: none;
-                    box-shadow: none;
-                }}
-
-                button:active {{
-                    transform: scale(0.97);
-                }}
-
-                button:hover {{
-                    filter: brightness(0.95);
                 }}
                 """
             ):
-                if st.button(label, key=f"region_{code}"):
-                    st.session_state.selected_region = code
+                if st.button(label, key=f"region_{code}"):  # 👈 HERE
+                    selected_region = code  # 👈 still uses original code
 
 # --- Mountains (Horské oblasti) ---
 st.markdown("### Horské oblasti")
-
-if "selected_mountain" not in st.session_state:
-    st.session_state.selected_mountain = None
-
+selected_mountain = None
 mountain_codes = [code for code, _ in mountains]
-mountain_colors = {code: "#bbbbbb" for code in mountain_codes}  # base color for all mountains
 
 for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(mountain_codes), 10)]):
     cols = st.columns(len(row))
     for col_idx, (col, code) in enumerate(zip(cols, row)):
-        base_color = mountain_colors.get(code, "#bbbbbb")
-        
-        # if selected, keep the color (or slightly darken)
-        if st.session_state.selected_mountain == code:
-            color = base_color  # could darken, e.g., "#aaaaaa"
-        else:
-            color = base_color
-
         container_key = f"mountain_container_{code}_{row_idx}_{col_idx}"
-
         with col:
             with stylable_container(
                 container_key,
                 css_styles=f"""
                 button {{
-                    background-color: {color};
+                    background-color: #bbbbbb;
                     color: black;
                     height: 40px;
                     width: 100%;
@@ -313,14 +272,14 @@ for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(moun
                 """
             ):
                 if st.button(code, key=f"mountain_{code}"):
-                    st.session_state.selected_mountain = code
+                    selected_mountain = code
 
 # --- Forecast output ---
 forecast_placeholder = st.empty()
 
-if st.session_state.selected_mountain:
+if selected_mountain:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_mountain(st.session_state.selected_mountain))
-elif st.session_state.selected_region:
+        forecast_placeholder.markdown(fetch_mountain(selected_mountain))
+elif selected_region:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_region(st.session_state.selected_region))
+        forecast_placeholder.markdown(fetch_region(selected_region))
