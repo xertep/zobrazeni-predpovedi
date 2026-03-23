@@ -193,101 +193,43 @@ def fetch_mountain(mountain_code):
 
     return "\n\n".join(output_lines)
 
+
 # --- Streamlit UI ---
+# Change browser tab title and favicon
+st.set_page_config(
+    page_title="Předpovědi počasí ČHMÚ",  # this changes the browser tab title
+    page_icon="🌤️",                     # optional: emoji or path to an image
+    layout="wide"                        # optional: wide layout for cards
+)
+
+# Your app content
 st.title("Předpovědi počasí ČHMÚ")
 
-region_codes = [
-    "JM", "ZL", "VY", "CB", "HK", "KV", "LB",
-    "MS", "OL", "PH", "PL", "PU", "SC", "UL", "CR"
-]
-
-mountain_codes = [code for code, _ in mountains]
-
-
-# --- Session state ---
-if "selected_region" not in st.session_state:
-    st.session_state.selected_region = None
-
-if "selected_mountain" not in st.session_state:
-    st.session_state.selected_mountain = None
-
-
-# --- Colors ---
-def get_color(code, is_mountain=False):
-    if is_mountain:
-        return "#eeeeee"
-
-    return {
-        "JM": "#f8c8dc",
-        "ZL": "#cfeccf",
-        "VY": "#cfe8f7",
-        "CR": "#f7e7a9",
-    }.get(code, "#eeeeee")
-
-
-# --- GLOBAL BUTTON STYLE ---
-st.markdown("""
-<style>
-.stButton button {
-    width: 100%;
-    height: 80px;
-    border-radius: 16px;
-    font-size: 18px;
-    font-weight: 600;
-    border: none;
-    transition: 0.2s;
-}
-
-.stButton button:hover {
-    opacity: 0.85;
-    transform: scale(1.03);
-}
-</style>
-""", unsafe_allow_html=True)
-
-
-# --- Card grid (REAL solution) ---
-def card_grid(items, cols_per_row, key_prefix, is_mountain=False):
-    rows = [items[i:i+cols_per_row] for i in range(0, len(items), cols_per_row)]
-
-    for row in rows:
-        cols = st.columns(len(row))
-
-        for i, code in enumerate(row):
-            color = get_color(code, is_mountain)
-
-            with cols[i]:
-                # inject per-button color
-                st.markdown(f"""
-                    <style>
-                    div[data-testid="stButton"]:has(button[key="{key_prefix}_{code}"]) button {{
-                        background-color: {color};
-                    }}
-                    </style>
-                """, unsafe_allow_html=True)
-
-                if st.button(code, key=f"{key_prefix}_{code}"):
-                    if is_mountain:
-                        st.session_state.selected_mountain = code
-                        st.session_state.selected_region = None
-                    else:
-                        st.session_state.selected_region = code
-                        st.session_state.selected_mountain = None
-
-
-# --- UI Layout ---
+# Regions buttons
 st.markdown("### Kraje")
-card_grid(region_codes, 5, "region")
+cols = st.columns(6)
+selected_region = None
+region_codes = ["JM","ZL","VY","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL","CR"]
+for i, code in enumerate(region_codes):
+    color = main_region_colors.get(code, other_region_colors.get(code, cr_color if code=="CR" else "lightgrey"))
+    if cols[i % 6].button(code, key=f"region_{code}"):
+        selected_region = code
 
+# Mountains buttons
 st.markdown("### Horské oblasti")
-card_grid(mountain_codes, 5, "mountain", is_mountain=True)
+cols_m = st.columns(5)
+selected_mountain = None
+for i, (code, _) in enumerate(mountains):
+    if cols_m[i % 5].button(code, key=f"mountain_{code}"):
+        selected_mountain = code
 
+# Show forecast immediately
+forecast_placeholder = st.empty()  # placeholder for forecast
 
-# --- Output ---
-st.markdown("---")
+if selected_mountain:
+    with st.spinner("Načítám data..."):
+        forecast_placeholder.markdown(fetch_mountain(selected_mountain))
 
-if st.session_state.selected_mountain:
-    st.markdown(fetch_mountain(st.session_state.selected_mountain))
-
-elif st.session_state.selected_region:
-    st.markdown(fetch_region(st.session_state.selected_region))
+elif selected_region:
+    with st.spinner("Načítám data..."):
+        forecast_placeholder.markdown(fetch_region(selected_region))
