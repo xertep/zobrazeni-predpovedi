@@ -32,6 +32,19 @@ MOUNTAIN_FORECAST_TYPES = [
     ("pCH2tx", "Day 2"),
 ]
 
+mountains = [
+    ("VY", "Žďárské vrchy"),
+    ("ZL", "Javorníky a Bílé Karpaty"),
+    ("CB", "Šumava a Novohradské hory"),
+    ("HK", "Krkonoše"),
+    ("LB", "Jizerské hory"),
+    ("MT", "Beskydy"),
+    ("OL", "Jeseníky a Králický Sněžník"),
+    ("PL", "Český a Slavkovský les"),
+    ("PU", "Orlické hory"),
+    ("UL", "Krušné hory"),
+]
+
 # Example region colors
 main_region_colors = {"JM": "pink", "ZL": "PaleGreen", "VY": "SkyBlue"}
 other_region_colors = {
