@@ -232,9 +232,9 @@ for row_idx, row in enumerate([region_codes[i:i+15] for i in range(0, len(region
                     color: black;
                     height: 80px;
                     width: 100%;
-                    font-size: 18px;
+                    font-size: 16px;
                     font-weight: 600;
-                    border-radius: 12px;
+                    border-radius: 16px;
                 }}
                 """
             ):
