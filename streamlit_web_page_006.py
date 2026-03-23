@@ -206,11 +206,11 @@ st.title("Předpovědi počasí ČHMÚ")
 
 # --- Regions (Kraje) ---
 st.markdown("### Kraje")
-region_codes = ["JM","ZL","VY","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL","CR"]
+region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
 selected_region = None
 
 # Split into rows of 5 buttons
-for row in [region_codes[i:i+5] for i in range(0, len(region_codes), 5)]:
+for row in [region_codes[i:i+15] for i in range(0, len(region_codes), 15)]:
     cols = st.columns(len(row))  # create one column per code in this row
     for col, code in zip(cols, row):
         color = main_region_colors.get(code, other_region_colors.get(code, cr_color if code=="CR" else "lightgrey"))
@@ -222,7 +222,7 @@ st.markdown("### Horské oblasti")
 selected_mountain = None
 
 # Split mountains into rows of 5
-for row in [mountains[i:i+5] for i in range(0, len(mountains), 5)]:
+for row in [mountains[i:i+10] for i in range(0, len(mountains), 10)]:
     cols = st.columns(len(row))
     for col, (code, _) in zip(cols, row):
         if col.button(code, key=f"mountain_{code}", use_container_width=True):
