@@ -212,67 +212,41 @@ if "selected_mountain" not in st.session_state:
     st.session_state.selected_mountain = None
 
 
-# --- Color logic ---
+# --- Colors ---
 def get_color(code, is_mountain=False):
     if is_mountain:
         return "#eeeeee"
 
     return {
-        "JM": "#f8c8dc",  # soft pink
-        "ZL": "#cfeccf",  # soft green
-        "VY": "#cfe8f7",  # soft blue
-        "CR": "#f7e7a9",  # soft gold
+        "JM": "#f8c8dc",
+        "ZL": "#cfeccf",
+        "VY": "#cfe8f7",
+        "CR": "#f7e7a9",
     }.get(code, "#eeeeee")
 
 
-# --- Card component ---
-def clickable_card(code, key_prefix, is_mountain=False):
-    color = get_color(code, is_mountain)
+# --- GLOBAL BUTTON STYLE ---
+st.markdown("""
+<style>
+.stButton button {
+    width: 100%;
+    height: 80px;
+    border-radius: 16px;
+    font-size: 18px;
+    font-weight: 600;
+    border: none;
+    transition: 0.2s;
+}
 
-    # Unique key
-    key = f"{key_prefix}_{code}"
-
-    # Create invisible button (logic only)
-    clicked = st.button(code, key=key)
-
-    # If clicked → store selection
-    if clicked:
-        if is_mountain:
-            st.session_state.selected_mountain = code
-            st.session_state.selected_region = None
-        else:
-            st.session_state.selected_region = code
-            st.session_state.selected_mountain = None
-
-    # Card UI (visual only)
-    st.markdown(f"""
-        <style>
-        div[data-testid="stButton"][key="{key}"] button {{
-            display: none;
-        }}
-        </style>
-
-        <div style="
-            background-color:{color};
-            padding:18px;
-            border-radius:16px;
-            text-align:center;
-            font-weight:600;
-            font-size:18px;
-            cursor:pointer;
-            user-select:none;
-            transition:0.2s;
-        "
-        onclick="document.querySelector('button[key={key}]')?.click()"
-        onmouseover="this.style.opacity='0.85'"
-        onmouseout="this.style.opacity='1'"
-        >
-            {code}
-        </div>
-    """, unsafe_allow_html=True)
+.stButton button:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+}
+</style>
+""", unsafe_allow_html=True)
 
 
-# --- Grid layout ---
+# --- Card grid (REAL solution) ---
 def card_grid(items, cols_per_row, key_prefix, is_mountain=False):
     rows = [items[i:i+cols_per_row] for i in range(0, len(items), cols_per_row)]
 
@@ -280,8 +254,25 @@ def card_grid(items, cols_per_row, key_prefix, is_mountain=False):
         cols = st.columns(len(row))
 
         for i, code in enumerate(row):
+            color = get_color(code, is_mountain)
+
             with cols[i]:
-                clickable_card(code, key_prefix, is_mountain)
+                # inject per-button color
+                st.markdown(f"""
+                    <style>
+                    div[data-testid="stButton"]:has(button[key="{key_prefix}_{code}"]) button {{
+                        background-color: {color};
+                    }}
+                    </style>
+                """, unsafe_allow_html=True)
+
+                if st.button(code, key=f"{key_prefix}_{code}"):
+                    if is_mountain:
+                        st.session_state.selected_mountain = code
+                        st.session_state.selected_region = None
+                    else:
+                        st.session_state.selected_region = code
+                        st.session_state.selected_mountain = None
 
 
 # --- UI Layout ---
