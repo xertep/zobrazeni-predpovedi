@@ -240,6 +240,28 @@ for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] 
                     border-radius: 12px;
                     margin-bottom: 8px;
                 }}
+
+                /* keep same color when clicked */
+                button:active {{
+                    background-color: {color};
+                }}
+
+                /* keep same color after click (focus) */
+                button:focus {{
+                    background-color: {color};
+                    outline: none;
+                    box-shadow: none;
+                }}
+
+                /* optional: hover effect */
+                button:hover {{
+                    filter: brightness(0.95);
+                }}
+
+                /* optional: hover effect */
+                button:hover {{
+                    filter: brightness(0.95);
+                }}
                 """
             ):
                 if st.button(label, key=f"region_{code}"):  # 👈 HERE
