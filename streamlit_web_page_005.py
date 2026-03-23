@@ -45,7 +45,7 @@ mountains = [
     ("UL", "Krušné hory"),
 ]
 
-# Colors
+# Example region colors
 main_region_colors = {"JM": "pink", "ZL": "PaleGreen", "VY": "SkyBlue"}
 other_region_colors = {
     "CB":"lightgrey", "HK":"lightgrey", "KV":"lightgrey", "LB":"lightgrey",
@@ -109,15 +109,16 @@ def fetch_region(region_code):
         except Exception as e:
             st.error(f"Error loading {label}: {e}")
 
+    # Build output with HTML for bold and spacing
     output_lines = []
 
     if place_name:
-        output_lines.append(f"**=== Předpověď {place_name} ===**\n")
+        output_lines.append(f'<b>=== Předpověď {place_name} ===</b><br>')
 
     for pattern, headline_main, items, sender in all_data:
         if pattern in ["pCK2tx", "pCK3tx", "pCK4tx"] and not dalsi_dny_inserted:
             if not (morning_found and pattern == "pCK2tx"):
-                output_lines.append("\n**=== Další dny ===**\n")
+                output_lines.append('<br><b>=== Další dny ===</b><br>')
                 dalsi_dny_inserted = True
 
         if evening_found and pattern == "pCK0tx":
@@ -126,26 +127,26 @@ def fetch_region(region_code):
             continue
 
         if pattern not in ["pCKntx", "pCK2tx", "pCK3tx", "pCK4tx", "pCRntx", "pCR2tx", "pCR3tx", "pCR4tx", "pCR5tx", "pCR8tx"] and headline_main:
-            output_lines.append(f"**{headline_main}**\n")
+            output_lines.append(f'<br><b>{headline_main}</b><br>')
 
         for item in items:
             h = item.get("headline")
             t = item.get("displayText")
             if h:
-                output_lines.append(f"**{h}**")
+                output_lines.append(f'<br><b>{h}</b><br>')
             if t:
                 t = t.replace("\xa0", " ")
-                output_lines.append(t)
+                output_lines.append(f'{t}<br>')
 
         if pattern == "pCK1tx" and sender:
-            output_lines.append(f"\nMeteorolog: {sender}")
+            output_lines.append(f'<br>Meteorolog: {sender}<br>')
 
     for pattern, _, _, sender in reversed(all_data):
         if pattern == "pCK4tx" and sender:
-            output_lines.append(f"\nMeteorolog: {sender}")
+            output_lines.append(f'<br>Meteorolog: {sender}<br>')
             break
 
-    return "\n\n".join(output_lines)
+    return "".join(output_lines)
 
 
 def fetch_mountain(mountain_code):
@@ -173,26 +174,26 @@ def fetch_mountain(mountain_code):
             items = sorted(props.get("data", []), key=lambda x: x.get("displayOrder", 0))
 
             if headline_main:
-                output_lines.append(f"**{headline_main}**\n")
+                output_lines.append(f'<br><b>{headline_main}</b><br>')
 
             for item in items:
                 h = item.get("headline")
                 t = item.get("displayText")
                 if h:
-                    output_lines.append(f"**{h}**")
+                    output_lines.append(f'<br><b>{h}</b><br>')
                 if t:
                     t = t.replace("\xa0", " ")
-                    output_lines.append(t)
+                    output_lines.append(f'{t}<br>')
 
         except Exception as e:
             st.error(f"Error loading {label} ({mountain_code}): {e}")
 
     if place_name:
-        output_lines.insert(0, f"**=== Předpověď {place_name} ===**\n")
+        output_lines.insert(0, f'<b>=== Předpověď {place_name} ===</b><br>')
     if sender_name:
-        output_lines.append(f"\nMeteorolog: {sender_name}")
+        output_lines.append(f'<br>Meteorolog: {sender_name}<br>')
 
-    return "\n\n".join(output_lines)
+    return "".join(output_lines)
 
 
 # --- Streamlit page config ---
@@ -279,7 +280,9 @@ forecast_placeholder = st.empty()
 
 if selected_mountain:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_mountain(selected_mountain))
+        forecast_html = fetch_mountain(selected_mountain)
+        forecast_placeholder.markdown(forecast_html, unsafe_allow_html=True)
 elif selected_region:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_region(selected_region))
+        forecast_html = fetch_region(selected_region)
+        forecast_placeholder.markdown(forecast_html, unsafe_allow_html=True)
