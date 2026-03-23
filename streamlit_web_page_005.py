@@ -195,6 +195,14 @@ def fetch_mountain(mountain_code):
 
 
 # --- Streamlit UI ---
+# Change browser tab title and favicon
+st.set_page_config(
+    page_title="Předpovědi počasí ČHMÚ",  # this changes the browser tab title
+    page_icon="🌤️",                     # optional: emoji or path to an image
+    layout="wide"                        # optional: wide layout for cards
+)
+
+# Your app content
 st.title("Předpovědi počasí ČHMÚ")
 
 # Regions buttons
