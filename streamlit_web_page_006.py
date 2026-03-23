@@ -202,6 +202,18 @@ st.set_page_config(
     layout="wide"
 )
 
+# Push content to top
+st.markdown(
+    """
+    <style>
+    .block-container {
+        padding-top: 0rem;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 st.title("Předpovědi počasí ČHMÚ")
 
 # --- Regions (Kraje) ---
@@ -209,7 +221,7 @@ st.markdown("### Kraje")
 region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
 selected_region = None
 
-# Split into rows of 5 buttons
+# Split into rows of 15 buttons
 for row in [region_codes[i:i+15] for i in range(0, len(region_codes), 15)]:
     cols = st.columns(len(row))  # create one column per code in this row
     for col, code in zip(cols, row):
@@ -221,7 +233,7 @@ for row in [region_codes[i:i+15] for i in range(0, len(region_codes), 15)]:
 st.markdown("### Horské oblasti")
 selected_mountain = None
 
-# Split mountains into rows of 5
+# Split mountains into rows of 10
 for row in [mountains[i:i+10] for i in range(0, len(mountains), 10)]:
     cols = st.columns(len(row))
     for col, (code, _) in zip(cols, row):
