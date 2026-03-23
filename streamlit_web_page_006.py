@@ -249,6 +249,24 @@ for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] 
                     font-weight: 600;
                     border-radius: 12px;
                     margin-bottom: 8px;
+
+                    -webkit-appearance: none;
+                    -webkit-tap-highlight-color: transparent;
+                }}
+
+                button:active,
+                button:focus {{
+                    background-color: {color};
+                    outline: none;
+                    box-shadow: none;
+                }}
+
+                button:active {{
+                    transform: scale(0.97);
+                }}
+
+                button:hover {{
+                    filter: brightness(0.95);
                 }}
                 """
             ):
