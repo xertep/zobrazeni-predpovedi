@@ -199,6 +199,11 @@ def fetch_mountain(mountain_code):
 # --- Streamlit UI ---
 st.title("Předpovědi počasí ČHMÚ")
 
+region_codes = [
+    "CR", "JM", "ZL", "VY", "CB", "HK", "KV",
+    "LB", "MS", "OL", "PH", "PL", "PU", "SC", "UL"
+]
+
 st.markdown("""
 <style>
 /* Default button */
