@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_extras.stylable_container import stylable_container
 import requests
 import re
 
@@ -32,6 +33,8 @@ MOUNTAIN_FORECAST_TYPES = [
 ]
 
 mountains = [
+    ("VY", "Žďárské vrchy"),
+    ("ZL", "Javorníky a Bílé Karpaty"),
     ("CB", "Šumava a Novohradské hory"),
     ("HK", "Krkonoše"),
     ("LB", "Jizerské hory"),
@@ -40,8 +43,6 @@ mountains = [
     ("PL", "Český a Slavkovský les"),
     ("PU", "Orlické hory"),
     ("UL", "Krušné hory"),
-    ("VY", "Žďárské vrchy"),
-    ("ZL", "Javorníky a Bílé Karpaty"),
 ]
 
 # Colors
@@ -194,8 +195,7 @@ def fetch_mountain(mountain_code):
     return "\n\n".join(output_lines)
 
 
-# --- Streamlit UI ---
-# Change browser tab title and favicon
+# --- Streamlit page config ---
 st.set_page_config(
     page_title="Předpovědi počasí ČHMÚ",
     page_icon="🌤️",
@@ -204,29 +204,75 @@ st.set_page_config(
 
 st.title("Předpovědi počasí ČHMÚ")
 
+# --- Colors ---
+main_region_colors = {"JM": "#ffc0cb", "ZL": "#98fb98", "VY": "#87ceeb", "CR": "#ffd700"}
+other_region_colors = {
+    "CB":"#eeeeee", "HK":"#eeeeee", "KV":"#eeeeee", "LB":"#eeeeee",
+    "MS":"#eeeeee", "OL":"#eeeeee", "PH":"#eeeeee", "PL":"#eeeeee",
+    "PU":"#eeeeee", "SC":"#eeeeee", "UL":"#eeeeee"
+}
+
 # --- Regions (Kraje) ---
 st.markdown("### Kraje")
 region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
+region_codes_cz = ["JM","ZL","VY","ČR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
 selected_region = None
 
-# Split into rows of 15 buttons
-for row in [region_codes[i:i+15] for i in range(0, len(region_codes), 15)]:
-    cols = st.columns(len(row))  # create one column per code in this row
-    for col, code in zip(cols, row):
-        color = main_region_colors.get(code, other_region_colors.get(code, cr_color if code=="CR" else "lightgrey"))
-        if col.button(code, key=f"region_{code}", use_container_width=True):
-            selected_region = code
+for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] for i in range(0, len(region_codes), 15)]):
+    cols = st.columns(len(row))
+    for col_idx, (col, (code, label)) in enumerate(zip(cols, row)):
+        color = main_region_colors.get(code, other_region_colors.get(code, "#eeeeee"))
+
+        container_key = f"region_container_{code}_{row_idx}_{col_idx}"
+
+        with col:
+            with stylable_container(
+                container_key,
+                css_styles=f"""
+                button {{
+                    background-color: {color};
+                    color: black;
+                    height: 40px;
+                    width: 100%;
+                    min-width: 85px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    border-radius: 12px;
+                    margin-bottom: 8px;
+                }}
+                """
+            ):
+                if st.button(label, key=f"region_{code}"):  # 👈 HERE
+                    selected_region = code  # 👈 still uses original code
 
 # --- Mountains (Horské oblasti) ---
 st.markdown("### Horské oblasti")
 selected_mountain = None
+mountain_codes = [code for code, _ in mountains]
 
-# Split mountains into rows of 10
-for row in [mountains[i:i+10] for i in range(0, len(mountains), 10)]:
+for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(mountain_codes), 10)]):
     cols = st.columns(len(row))
-    for col, (code, _) in zip(cols, row):
-        if col.button(code, key=f"mountain_{code}", use_container_width=True):
-            selected_mountain = code
+    for col_idx, (col, code) in enumerate(zip(cols, row)):
+        container_key = f"mountain_container_{code}_{row_idx}_{col_idx}"
+        with col:
+            with stylable_container(
+                container_key,
+                css_styles=f"""
+                button {{
+                    background-color: #bbbbbb;
+                    color: black;
+                    height: 40px;
+                    width: 100%;
+                    min-width: 70px;
+                    font-size: 18px;
+                    font-weight: 600;
+                    border-radius: 12px;
+                    margin-bottom: 16px;
+                }}
+                """
+            ):
+                if st.button(code, key=f"mountain_{code}"):
+                    selected_mountain = code
 
 # --- Forecast output ---
 forecast_placeholder = st.empty()
