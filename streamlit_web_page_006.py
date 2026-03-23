@@ -196,7 +196,6 @@ def fetch_mountain(mountain_code):
 # --- Streamlit UI ---
 st.title("Předpovědi počasí ČHMÚ")
 
-# Order EXACTLY as you want
 region_codes = [
     "JM", "ZL", "VY", "CB", "HK", "KV", "LB",
     "MS", "OL", "PH", "PL", "PU", "SC", "UL", "CR"
@@ -205,67 +204,99 @@ region_codes = [
 mountain_codes = [code for code, _ in mountains]
 
 
+# --- Session state ---
+if "selected_region" not in st.session_state:
+    st.session_state.selected_region = None
+
+if "selected_mountain" not in st.session_state:
+    st.session_state.selected_mountain = None
+
+
 # --- Color logic ---
 def get_color(code, is_mountain=False):
     if is_mountain:
         return "#eeeeee"
 
-    if code == "JM":
-        return "#f8c8dc"  # soft pink
-    elif code == "ZL":
-        return "#cfeccf"  # soft green
-    elif code == "VY":
-        return "#cfe8f7"  # soft blue
-    elif code == "CR":
-        return "#f7e7a9"  # soft gold
-    else:
-        return "#eeeeee"  # grey
+    return {
+        "JM": "#f8c8dc",  # soft pink
+        "ZL": "#cfeccf",  # soft green
+        "VY": "#cfe8f7",  # soft blue
+        "CR": "#f7e7a9",  # soft gold
+    }.get(code, "#eeeeee")
 
 
-# --- Card grid ---
+# --- Card component ---
+def clickable_card(code, key_prefix, is_mountain=False):
+    color = get_color(code, is_mountain)
+
+    # Unique key
+    key = f"{key_prefix}_{code}"
+
+    # Create invisible button (logic only)
+    clicked = st.button(code, key=key)
+
+    # If clicked → store selection
+    if clicked:
+        if is_mountain:
+            st.session_state.selected_mountain = code
+            st.session_state.selected_region = None
+        else:
+            st.session_state.selected_region = code
+            st.session_state.selected_mountain = None
+
+    # Card UI (visual only)
+    st.markdown(f"""
+        <style>
+        div[data-testid="stButton"][key="{key}"] button {{
+            display: none;
+        }}
+        </style>
+
+        <div style="
+            background-color:{color};
+            padding:18px;
+            border-radius:16px;
+            text-align:center;
+            font-weight:600;
+            font-size:18px;
+            cursor:pointer;
+            user-select:none;
+            transition:0.2s;
+        "
+        onclick="document.querySelector('button[key={key}]')?.click()"
+        onmouseover="this.style.opacity='0.85'"
+        onmouseout="this.style.opacity='1'"
+        >
+            {code}
+        </div>
+    """, unsafe_allow_html=True)
+
+
+# --- Grid layout ---
 def card_grid(items, cols_per_row, key_prefix, is_mountain=False):
-    selected = None
     rows = [items[i:i+cols_per_row] for i in range(0, len(items), cols_per_row)]
 
     for row in rows:
         cols = st.columns(len(row))
 
         for i, code in enumerate(row):
-            color = get_color(code, is_mountain)
-
             with cols[i]:
-                # Card background
-                st.markdown(f"""
-                    <div style="
-                        background-color:{color};
-                        padding:12px;
-                        border-radius:14px;
-                        text-align:center;
-                        margin-bottom:6px;
-                    ">
-                """, unsafe_allow_html=True)
-
-                # Clickable button
-                if st.button(code, key=f"{key_prefix}_{code}"):
-                    selected = code
-
-                st.markdown("</div>", unsafe_allow_html=True)
-
-    return selected
+                clickable_card(code, key_prefix, is_mountain)
 
 
 # --- UI Layout ---
 st.markdown("### Kraje")
-selected_region = card_grid(region_codes, 5, "region")
+card_grid(region_codes, 5, "region")
 
 st.markdown("### Horské oblasti")
-selected_mountain = card_grid(mountain_codes, 5, "mountain", is_mountain=True)
+card_grid(mountain_codes, 5, "mountain", is_mountain=True)
 
 
 # --- Output ---
 st.markdown("---")
 
-if selected_mountain:
-    st.markdown(fetch_mountain(selected_mountain))
-elif selected_region:
-    st.markdown(fetch_region(selected_region))
+if st.session_state.selected_mountain:
+    st.markdown(fetch_mountain(st.session_state.selected_mountain))
+
+elif st.session_state.selected_region:
+    st.markdown(fetch_region(st.session_state.selected_region))
