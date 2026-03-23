@@ -217,7 +217,7 @@ st.markdown("### Kraje")
 region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
 selected_region = None
 
-for row_idx, row in enumerate([region_codes[i:i+5] for i in range(0, len(region_codes), 5)]):
+for row_idx, row in enumerate([region_codes[i:i+15] for i in range(0, len(region_codes), 15)]):
     cols = st.columns(len(row))
     for col_idx, (col, code) in enumerate(zip(cols, row)):
         color = main_region_colors.get(code, other_region_colors.get(code, "#eeeeee"))
@@ -246,7 +246,7 @@ st.markdown("### Horské oblasti")
 selected_mountain = None
 mountain_codes = [code for code, _ in mountains]
 
-for row_idx, row in enumerate([mountain_codes[i:i+5] for i in range(0, len(mountain_codes), 5)]):
+for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(mountain_codes), 10)]):
     cols = st.columns(len(row))
     for col_idx, (col, code) in enumerate(zip(cols, row)):
         container_key = f"mountain_container_{code}_{row_idx}_{col_idx}"
