@@ -215,14 +215,16 @@ other_region_colors = {
 # --- Regions (Kraje) ---
 st.markdown("### Kraje")
 region_codes = ["JM","ZL","VY","CR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
+region_codes_cz = ["JM","ZL","VY","ČR","CB","HK","KV","LB","MS","OL","PH","PL","PU","SC","UL"]
 selected_region = None
 
-for row_idx, row in enumerate([region_codes[i:i+15] for i in range(0, len(region_codes), 15)]):
+for row_idx, row in enumerate([list(zip(region_codes, region_codes_cz))[i:i+15] for i in range(0, len(region_codes), 15)]):
     cols = st.columns(len(row))
-    for col_idx, (col, code) in enumerate(zip(cols, row)):
+    for col_idx, (col, (code, label)) in enumerate(zip(cols, row)):
         color = main_region_colors.get(code, other_region_colors.get(code, "#eeeeee"))
-        # unique key for each container
+
         container_key = f"region_container_{code}_{row_idx}_{col_idx}"
+
         with col:
             with stylable_container(
                 container_key,
@@ -238,8 +240,8 @@ for row_idx, row in enumerate([region_codes[i:i+15] for i in range(0, len(region
                 }}
                 """
             ):
-                if st.button(code, key=f"region_{code}"):
-                    selected_region = code
+                if st.button(label, key=f"region_{code}"):  # 👈 HERE
+                    selected_region = code  # 👈 still uses original code
 
 # --- Mountains (Horské oblasti) ---
 st.markdown("### Horské oblasti")
@@ -258,7 +260,7 @@ for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(moun
                     background-color: #eeeeee;
                     color: black;
                     height: 40px;
-                    width: 150%;
+                    width: 130%;
                     font-size: 18px;
                     font-weight: 600;
                     border-radius: 12px;
