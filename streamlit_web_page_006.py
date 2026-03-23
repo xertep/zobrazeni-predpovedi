@@ -261,7 +261,8 @@ for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(moun
                     background-color: #bbbbbb;
                     color: black;
                     height: 40px;
-                    width: 130%;
+                    width: 100%;
+                    min-width: 70px;
                     font-size: 18px;
                     font-weight: 600;
                     border-radius: 12px;
