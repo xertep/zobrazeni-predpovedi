@@ -300,9 +300,9 @@ for row_idx, row in enumerate([mountain_codes[i:i+10] for i in range(0, len(moun
 # --- Forecast output ---
 forecast_placeholder = st.empty()
 
-if selected_mountain:
+if st.session_state.selected_mountain:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_mountain(selected_mountain))
-elif selected_region:
+        forecast_placeholder.markdown(fetch_mountain(st.session_state.selected_mountain))
+elif st.session_state.selected_region:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_region(selected_region))
+        forecast_placeholder.markdown(fetch_region(st.session_state.selected_region))
