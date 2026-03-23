@@ -33,6 +33,8 @@ MOUNTAIN_FORECAST_TYPES = [
 ]
 
 mountains = [
+    ("VY", "Žďárské vrchy"),
+    ("ZL", "Javorníky a Bílé Karpaty"),
     ("CB", "Šumava a Novohradské hory"),
     ("HK", "Krkonoše"),
     ("LB", "Jizerské hory"),
@@ -41,8 +43,6 @@ mountains = [
     ("PL", "Český a Slavkovský les"),
     ("PU", "Orlické hory"),
     ("UL", "Krušné hory"),
-    ("VY", "Žďárské vrchy"),
-    ("ZL", "Javorníky a Bílé Karpaty"),
 ]
 
 # Colors
