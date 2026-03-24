@@ -236,7 +236,10 @@ forecast_placeholder = st.empty()
 
 if selected_mountain:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_mountain(selected_mountain))
+        forecast_html = fetch_mountain(selected_mountain)
+        forecast_placeholder.markdown(forecast_html, unsafe_allow_html=True)
 elif selected_region:
     with st.spinner("Načítám data..."):
-        forecast_placeholder.markdown(fetch_region(selected_region))
+        forecast_html = fetch_region(selected_region)
+        forecast_placeholder.markdown(forecast_html, unsafe_allow_html=True)
+
