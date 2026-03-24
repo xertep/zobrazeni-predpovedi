@@ -1,6 +1,6 @@
 Tato aplikace využívá otevřená data Český hydrometeorologický ústav k zobrazení všech dostupných textových předpovědí počasí v jednoduchém, tradičním stylu.
 
-Obsahuje předpovědi pro jednotlivé regiony, celou Českou republiku i vybraná pohoří.
+Obsahuje předpovědi pro jednotlivé kraje, celou Českou republiku i vybraná pohoří.
 
 Všechny předpovědi jsou psány lidskými meteorology a nejsou automaticky generovány z numerických modelů.
 
