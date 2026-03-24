@@ -5,7 +5,7 @@ Obsahuje předpovědi pro jednotlivé kraje, celou Českou republiku i vybraná 
 Všechny předpovědi jsou psány lidskými meteorology a nejsou automaticky generovány z numerických modelů.
 
 Hlavní soubor pro spuštění aplikace je streamlit_web_page_005.py.
-Fuknční webová aplikace (vytvořená pomocí Streamlit) je dostupná zde: https://zobrazeni-predpovedi-r9c7dyy8wx8nzhrfsmoznf.streamlit.app/
+Funkční webová aplikace (vytvořená pomocí Streamlit) je dostupná zde: https://zobrazeni-predpovedi-r9c7dyy8wx8nzhrfsmoznf.streamlit.app/
 
 Aplikaci může při otevření trvat několik sekund, než se načte, zejména pokud byla delší dobu neaktivní.
 To je běžné chování — aplikace se při nečinnosti automaticky uspí a při dalším otevření potřebuje krátký čas na opětovné spuštění.
