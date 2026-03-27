@@ -232,7 +232,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("Předpovědi počasí ČHMÚ")
+st.title("Předpovědi počasí ČHMÚ testing")
 
 # --- Colors ---
 main_region_colors = {"JM": "#ffc0cb", "ZL": "#98fb98", "VY": "#87ceeb", "CR": "#ffd700"}
