@@ -11,8 +11,6 @@ Lepší rozšířená aplikace obsahující i možnost zobrazit grafy všech dos
 Aplikaci může při otevření trvat několik sekund, než se načte, zejména pokud byla delší dobu neaktivní je potřeba ji probudit kliknutím na modré tlačítko.
 To je běžné chování — aplikace se při nečinnosti automaticky uspí a při dalším otevření potřebuje krátký čas na opětovné spuštění.
 
-Alternativní verze s černými tlačítky streamlit_web_page_006.py je zde: https://zobrazeni-predpovedi-ghlxsjk9rth9jgotew7nbf.streamlit.app/
-
 
 This app uses open data from the Czech Hydrometeorological Institute to display all available text weather forecasts in a simple, classic style.
 
@@ -26,5 +24,3 @@ Better (extended) application including also the option to show graphs from all 
 
 The app may take a few seconds to load when you open it, especially if it has been inactive for a while (click of the button brings it back up).
 This is normal behavior — the app automatically goes to sleep when not in use and needs a short moment to start again.
-
-An alternative version with black buttons streamlit_web_page_006.py is here: https://zobrazeni-predpovedi-ghlxsjk9rth9jgotew7nbf.streamlit.app/
